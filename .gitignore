@@ -1,0 +1,9 @@
+
+# Generated files
+build.xml
+*.jar
+
+
+# Autosave files
+*~
+

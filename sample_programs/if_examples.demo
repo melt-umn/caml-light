@@ -1,0 +1,16 @@
+
+
+if true then 3 else 4 ;;
+
+
+if 3 > 4 or 5.0 <=. 6.0 then [] else [3.0] ;;
+
+
+if 3.0 +. 4.0 then "Yes" else "No" ;;
+
+
+if false then "Yes" else 5 ;;
+
+
+if 3.0 + true then "Yes" else "No" ;;
+

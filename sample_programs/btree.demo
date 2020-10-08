@@ -1,0 +1,38 @@
+
+
+(*binary tree storing items of 'a with keys of type int*)
+type 'a btree =
+  Leaf
+| Node of (int * 'a * 'a btree * 'a btree) ;;
+
+
+let rec insert = fun Leaf newkey newa ->
+                     Node (newkey, newa, Leaf, Leaf)
+                   | (Node (key, a, left, right)) newkey newa ->
+                     if newkey < key
+                     then Node (key, a, insert left newkey newa, right)
+                     else if newkey > key
+                          then Node (key, a, left, insert right newkey newa)
+                          else Node (key, newa, left, right)
+    in insert ;;
+
+
+type 'a Maybe =
+  Nothing
+| Just of 'a ;;
+
+
+let rec find = fun Leaf n -> Nothing
+                 | (Node (key, a, left, right)) n ->
+                   if key = n
+                   then Just a
+                   else if n < key
+                        then find left n
+                        else find right n
+    in find ;;
+
+
+type 'a btree2 =
+  Leaf2
+| Node of (int * 'a * 'a btree2 * 'a btree2) ;;
+

@@ -1,0 +1,25 @@
+
+
+type 'a myList =
+  mynil
+| mycons of ('a * 'a myList) ;;
+
+
+let rec append = fun [] l2 -> l2
+               | (h::t) l2 -> h::(append t l2)
+    in append ;;
+
+
+type 'a option =
+  Some of 'a
+| None ;;
+
+
+let rec nth = fun (l : 'a list) n ->
+                 match l with
+                   [] -> None
+                 | h::t -> if n = 0
+                           then h
+                           else nth t (n - 1)
+    in nth ;;
+

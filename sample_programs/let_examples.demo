@@ -1,0 +1,15 @@
+
+
+let x = 3 in x + 8 ;;
+
+
+let x = 3::4::[] and
+    y = 5
+  in y::x ;;
+
+
+let x = 3 + true in x ;;
+
+
+let (x : Bool) = 3 in x ;;
+

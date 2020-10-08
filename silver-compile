@@ -1,0 +1,8 @@
+#!/bin/bash
+
+GRAMMAR=grammars:driver
+
+silver -o camlLight.jar --clean -I .. $@ $GRAMMAR
+
+
+
