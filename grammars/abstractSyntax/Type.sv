@@ -2,11 +2,11 @@ grammar grammars:abstractSyntax;
 
 
 --whether the types are valid (nobody is throwing in an undefined type or using a type wrong)
-Restricted synthesized attribute validType::Boolean;
+restricted synthesized attribute validType::Boolean;
 --variables that occur in a type
-Restricted synthesized attribute freeTyVars::[String];
+restricted synthesized attribute freeTyVars::[String];
 --whether the type constructors are valid (new variables can be introduced)
-Restricted synthesized attribute validNewVarType::Boolean;
+restricted synthesized attribute validNewVarType::Boolean;
 
 nonterminal Type with pp, knownTypes, knownTyVars, validType, freeTyVars, validNewVarType;
 
@@ -504,11 +504,11 @@ Type ::= l::[Type] result::Type
 
 --types known before the current definition set
 --this is for determining whether a type has been defined before
-Restricted inherited attribute priorTypes::[Pair<String ExtantType>];
+restricted inherited attribute priorTypes::[Pair<String ExtantType>];
 --The name of the type being defined
-Restricted synthesized attribute name::String;
+restricted synthesized attribute name::String;
 
-Restricted inherited attribute knownTyVars::[String];
+restricted inherited attribute knownTyVars::[String];
 
 nonterminal TypeDef with
    pp, knownTypes, knownTypes_out, knownConstructors, knownConstructors_out, defOK, priorTypes, name;
@@ -538,9 +538,9 @@ top::TypeDef ::= params::TypeParams name::String constructors::Constructors
 }
 
 
-Restricted synthesized attribute len::Integer;
-Restricted synthesized attribute tyParams::[Type];
-Restricted synthesized attribute names::[String];
+restricted synthesized attribute len::Integer;
+restricted synthesized attribute tyParams::[Type];
+restricted synthesized attribute names::[String];
 
 nonterminal TypeParams with pp, len, tyParams, names;
 
@@ -570,7 +570,7 @@ top::TypeParams ::=
 
 
 --The type the constructors are going to be building.
-Restricted inherited attribute buildingType::Type;
+restricted inherited attribute buildingType::Type;
 
 nonterminal Constructors with
    pp, buildingType, gamma, knownTypes, knownTyVars, knownConstructors, knownConstructors_out, defOK;
@@ -750,7 +750,7 @@ top::TypeDefs ::=
 }
 
 
-Restricted synthesized attribute tyNames::[String];
+restricted synthesized attribute tyNames::[String];
 
 nonterminal TypeDefinition with
    pp, knownTypes, knownTypes_out, knownConstructors, knownConstructors_out, defOK, tyNames;

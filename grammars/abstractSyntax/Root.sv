@@ -8,19 +8,19 @@ type TyCtxType = [Pair<String Type>];
 
 
 --A list of known atomic types
-Restricted inherited attribute knownTypes::[Pair<String ExtantType>];
+restricted inherited attribute knownTypes::[Pair<String ExtantType>];
 
 --A list of known names, including constructors
 --This needs to be implicit because the type attribute flows into it
-Implicit inherited attribute gamma::Maybe<TyCtxType>;
+implicit inherited attribute gamma::Maybe<TyCtxType>;
 
 --A list of type substitutions for type variables
 --Why is this an implicit Maybe?  This allows us to use the implicit
 --   type to decide what this will be.
-Implicit inherited attribute subst::Maybe<[Pair<String Type>]>;
+implicit inherited attribute subst::Maybe<[Pair<String Type>]>;
 
 --A list of constructors and their types
-Restricted inherited attribute knownConstructors::[Pair<String Type>];
+restricted inherited attribute knownConstructors::[Pair<String Type>];
 
 
 --find out whether a given type is real and how many parameters it has
@@ -59,14 +59,14 @@ Type ::= name::String gamma::[Pair<String Type>] d::Type
 
 
 --the updated contexts after a declaration
-Implicit synthesized attribute gamma_out::Maybe<TyCtxType>;
-Restricted synthesized attribute knownTypes_out::[Pair<String ExtantType>];
-Implicit synthesized attribute subst_out::Maybe<[Pair<String Type>]>;
-Restricted synthesized attribute knownConstructors_out::[Pair<String Type>];
+implicit synthesized attribute gamma_out::Maybe<TyCtxType>;
+restricted synthesized attribute knownTypes_out::[Pair<String ExtantType>];
+implicit synthesized attribute subst_out::Maybe<[Pair<String Type>]>;
+restricted synthesized attribute knownConstructors_out::[Pair<String Type>];
 
 
 
-Restricted synthesized attribute defOK::Boolean;
+restricted synthesized attribute defOK::Boolean;
 
 
 nonterminal ExceptionDef with
