@@ -167,7 +167,7 @@ concrete productions top::BasicExpr_c
 | id::Identifier_t
   { top.ast = var(id.lexeme); }
 | i::IntegerLiteral_t
-  { top.ast = intConst(toInt(i.lexeme)); }
+  { top.ast = intConst(toInteger(i.lexeme)); }
 | f::FloatLiteral_Exp_t
   { top.ast = floatConst(toFloat(f.lexeme)); }
 | f::FloatLiteral_Dec_t

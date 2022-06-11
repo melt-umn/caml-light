@@ -331,7 +331,7 @@ top::Pattern ::= contents::TuplePatternContents
 }
 
 
-Implicit synthesized attribute ttb_type::Maybe<TupleTyBuild>;
+implicit synthesized attribute ttb_type::Maybe<TupleTyBuild>;
 
 nonterminal TuplePatternContents with
    pp, gamma, gamma_out, subst, subst_out, ttb_type, knownConstructors, knownTypes;

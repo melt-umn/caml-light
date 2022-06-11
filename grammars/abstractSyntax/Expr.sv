@@ -3,7 +3,7 @@ grammar grammars:abstractSyntax;
 
 synthesized attribute pp::String;
 
-Implicit synthesized attribute type::Maybe<Type>;
+implicit synthesized attribute type::Maybe<Type>;
 
 
 nonterminal Expr with
@@ -35,7 +35,7 @@ top::Expr ::= b::Bindings e::Expr
 
 
 --To make sure bindings are well-typed, where we don't get a type out, we need a Boolean
-Implicit synthesized attribute typeOK::Maybe<Boolean>;
+implicit synthesized attribute typeOK::Maybe<Boolean>;
 
 nonterminal Bindings with
    pp, gamma, gamma_out, subst, subst_out, knownConstructors, typeOK, knownTypes;
@@ -104,8 +104,8 @@ top::Expr ::= b::RecBindings e::Expr
 
 
 --we need rec substs so gamma_out doesn't depend on the regular subst, which depends on e.type
-Implicit inherited attribute recSubst::Maybe<[Pair<String Type>]>;
-Implicit synthesized attribute recSubst_out::Maybe<[Pair<String Type>]>;
+implicit inherited attribute recSubst::Maybe<[Pair<String Type>]>;
+implicit synthesized attribute recSubst_out::Maybe<[Pair<String Type>]>;
 
 nonterminal RecBindings with
    pp, gamma, gamma_out, subst, subst_out, knownConstructors, typeOK, knownTypes, recSubst, recSubst_out;
@@ -275,7 +275,7 @@ top::Expr ::= tc::TupleContents
 }
 
 
-Implicit synthesized attribute tc_type::Maybe<TupleTyBuild>;
+implicit synthesized attribute tc_type::Maybe<TupleTyBuild>;
 
 
 nonterminal TupleContents with
@@ -1512,7 +1512,7 @@ top::Expr ::= e::Expr clauses::SimpleMatching
 }
 
 
-Implicit synthesized attribute matchType::Maybe<Type>;
+implicit synthesized attribute matchType::Maybe<Type>;
 
 nonterminal SimpleMatching with
    pp, knownConstructors, gamma, subst, subst_out, type, matchType, knownTypes;
@@ -1580,7 +1580,7 @@ top::Expr ::= clauses::MultipleMatching
 }
 
 
-Implicit synthesized attribute ptyList::Maybe<[Type]>;
+implicit synthesized attribute ptyList::Maybe<[Type]>;
 
 nonterminal PatternList with
    pp, knownConstructors, gamma_out, ptyList, subst, subst_out, knownTypes;

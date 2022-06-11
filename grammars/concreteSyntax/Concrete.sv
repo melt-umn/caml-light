@@ -228,7 +228,7 @@ concrete productions top::Pattern_Sub5
 | '(' p::Pattern_c ')'
   { top.ast = p.ast; }
 | i::IntegerLiteral_t
-  { top.ast = intPattern(toInt(i.lexeme)); }
+  { top.ast = intPattern(toInteger(i.lexeme)); }
 | f::FloatLiteral_Dec_t
   { top.ast = floatPattern(toFloat(f.lexeme)); }
 | f::FloatLiteral_Exp_t
