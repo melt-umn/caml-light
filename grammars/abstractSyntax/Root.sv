@@ -1,9 +1,6 @@
 grammar grammars:abstractSyntax;
 
 
-imports core:monad;
-
-
 type TyCtxType = [Pair<String Type>];
 
 
