@@ -1,14 +1,14 @@
-grammar grammars:driver;
+grammar edu:umn:cs:melt:camlLight:driver;
 
 
-imports grammars:concreteSyntax;
-imports grammars:abstractSyntax;
+imports edu:umn:cs:melt:camlLight:concreteSyntax;
+imports edu:umn:cs:melt:camlLight:abstractSyntax;
 
 
 
 parser hostparse::Root_c
 {
-  grammars:concreteSyntax;
+  edu:umn:cs:melt:camlLight:concreteSyntax;
 }
 
 function main

@@ -1,4 +1,4 @@
-grammar grammars:abstractSyntax;
+grammar edu:umn:cs:melt:camlLight:abstractSyntax;
 
 
 type TyCtxType = [Pair<String Type>];

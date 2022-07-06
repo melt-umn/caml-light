@@ -1,4 +1,4 @@
-grammar grammars:concreteSyntax;
+grammar edu:umn:cs:melt:camlLight:concreteSyntax;
 
 imports silver:langutil;
 

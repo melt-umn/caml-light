@@ -1,4 +1,4 @@
-grammar grammars:abstractSyntax;
+grammar edu:umn:cs:melt:camlLight:abstractSyntax;
 
 
 --whether the types are valid (nobody is throwing in an undefined type or using a type wrong)

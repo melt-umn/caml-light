@@ -1,7 +1,7 @@
-grammar grammars:concreteSyntax;
+grammar edu:umn:cs:melt:camlLight:concreteSyntax;
 
 
-imports grammars:abstractSyntax;
+imports edu:umn:cs:melt:camlLight:abstractSyntax;
 
 
 ignore terminal Blank_t /[\t\r\n\ ]+/;
