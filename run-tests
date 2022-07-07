@@ -1,0 +1,25 @@
+#!/bin/bash
+
+for testFile in sample_programs/*; do
+    echo
+    echo
+    echo "============================================================"
+    echo
+    echo
+    java -jar camlLight.jar "$testFile"
+    result=$?
+    if [[ "$result" != 0 ]]; then
+        echo
+        echo "**************************************************"
+        echo "Test $testFile failed"
+        echo "**************************************************"
+        exit 1
+    fi
+done
+
+
+echo
+echo "**************************************************"
+echo "All tests succeeded"
+echo "**************************************************"
+exit 0
