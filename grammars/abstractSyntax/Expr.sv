@@ -104,8 +104,8 @@ top::Expr ::= b::RecBindings e::Expr
 
 
 --we need rec substs so gamma_out doesn't depend on the regular subst, which depends on e.type
-implicit inherited attribute recSubst::Maybe<[Pair<String Type>]>;
-implicit synthesized attribute recSubst_out::Maybe<[Pair<String Type>]>;
+implicit inherited attribute recSubst::Maybe<[(String, Type>]);
+implicit synthesized attribute recSubst_out::Maybe<[(String, Type>]);
 
 nonterminal RecBindings with
    pp, gamma, gamma_out, subst, subst_out, knownConstructors, typeOK, knownTypes, recSubst, recSubst_out;
@@ -324,8 +324,8 @@ top::Expr ::= name::String
   --we need to freshen anything with an arrow type or constructors without an arrow type
   --We also need to ban binding names of known constructors, which means gamma will not contain
   --   any of the same names as the constructors, so the name being looked up can only be found in one, not both
-  implicit top.type = if containsBy(\p1::Pair<String Type> p2::Pair<String Type> -> fst(p1) == fst(p2),
-                                    pair(name, unitType()), top.knownConstructors)  --unit is an unused placeholder
+  implicit top.type = if containsBy(\p1::(String, Type) p2::(String, Type) -> fst(p1) == fst(p2),
+                                    (name, unitType()), top.knownConstructors)  --unit is an unused placeholder
                       then typeFreshen(lookupName(name, top.knownConstructors), top.subst_out)
                       else case typeSubst(lookupName(name, top.gamma), top.subst_out) of
                            | arrowType(ty1, ty2) -> typeFreshen(arrowType(ty1, ty2), top.subst_out)
@@ -459,7 +459,7 @@ top::Expr ::= name::String startIndex::Expr endIndex::Expr body::Expr
 
   implicit startIndex.gamma = top.gamma;
   implicit endIndex.gamma = top.gamma;
-  implicit body.gamma = [pair(name, intType())] ++ top.gamma;
+  implicit body.gamma = [(name, intType())] ++ top.gamma;
 
   implicit startIndex.subst = top.subst;
   implicit endIndex.subst = startIndex.subst_out;
@@ -491,7 +491,7 @@ top::Expr ::= name::String startIndex::Expr endIndex::Expr body::Expr
 
   implicit startIndex.gamma = top.gamma;
   implicit endIndex.gamma = top.gamma;
-  implicit body.gamma = [pair(name, intType())] ++ top.gamma;
+  implicit body.gamma = [(name, intType())] ++ top.gamma;
 
   implicit startIndex.subst = top.subst;
   implicit endIndex.subst = startIndex.subst_out;

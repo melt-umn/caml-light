@@ -2,18 +2,18 @@ grammar grammars:abstractSyntax;
 
 
 function noRepeatedNames
-Boolean ::= l1::[Pair<String Type>] l2::[Pair<String Type>]
+Boolean ::= l1::[(String, Type)] l2::[(String, Type)]
 {
   return noRepeatedNames_helper(l1, l2) &&
          noRepeatedNames_helper(l2, l1);
 }
 function noRepeatedNames_helper
-Boolean ::= l1::[Pair<String Type>] l2::[Pair<String Type>]
+Boolean ::= l1::[(String, Type)] l2::[(String, Type)]
 {
   --no name from l1 in l2
   return case l1 of
          | [] -> true
-         | pair(hn, ht)::t -> case lookupName(hn, l2) of
+         | (hn, ht)::t -> case lookupName(hn, l2) of
                               | just(_) -> false
                               | nothing() -> noRepeatedNames_helper(t, l2)
                               end
@@ -23,11 +23,11 @@ Boolean ::= l1::[Pair<String Type>] l2::[Pair<String Type>]
 
 --no shared names between the lists
 function namesDisjoint
-Boolean ::= l1::[Pair<String Type>] l2::[Pair<String Type>]
+Boolean ::= l1::[(String, Type)] l2::[(String, Type)]
 {
   return case l1 of
   | [] -> true
-  | pair(n,ty)::tl -> case lookupName(n, l2) of
+  | (n,ty)::tl -> case lookupName(n, l2) of
                       | nothing() -> namesDisjoint(tl, l2)
                       | just(_) -> false
                       end
@@ -237,13 +237,13 @@ top::Pattern ::= p::Pattern name::String
 
   restricted p.knownConstructors = top.knownConstructors;
 
-  implicit top.gamma_out = pair(name, p.type)::p.gamma_out;
+  implicit top.gamma_out = (name, p.type)::p.gamma_out;
 
   implicit p.subst = top.subst;
   implicit top.subst_out = p.subst_out;
 
   --the name being bound here cannot be bound elsewhere
-  implicit top.type = if namesDisjoint([pair(name, p.type)], p.gamma_out)
+  implicit top.type = if namesDisjoint([(name, p.type)], p.gamma_out)
                       then p.type
                       end;
 }
@@ -299,11 +299,11 @@ top::Pattern ::= name::String
 
   --if it isn't a constructor, it's a variable, so bind it and put it out
   --unitType() is a placeholder for making the Silver type correct but is ignored
-  implicit top.gamma_out = if containsBy(\p1::Pair<String Type> p2::Pair<String Type> ->
+  implicit top.gamma_out = if containsBy(\p1::(String, Type) p2::(String, Type) ->
                                             fst(p1) == fst(p2),
-                                         pair(name, unitType()), top.knownConstructors)
+                                         (name, unitType()), top.knownConstructors)
                            then []
-                           else [pair(name, freshType())];
+                           else [(name, freshType())];
 
   implicit top.subst_out = top.subst;
 

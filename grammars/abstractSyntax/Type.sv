@@ -226,40 +226,40 @@ top::TupleTyBuild ::=
 
 --unify two types, yielding the unifying substitution
 function typeUnify
-[Pair<String Type>] ::= ty1::Type ty2::Type tySubs::[Pair<String Type>]
+[(String, Type)] ::= ty1::Type ty2::Type tySubs::[(String, Type)]
 {
   return case typeSubst(ty1, tySubs) of
          | intType() -> case typeSubst(ty2, tySubs) of
-                        | tyVar(x) -> pair(x, intType())::tySubs
+                        | tyVar(x) -> (x, intType())::tySubs
                         | _ -> tySubs
                         end
          | floatType() -> case typeSubst(ty2, tySubs) of
-                          | tyVar(x) -> pair(x, floatType())::tySubs
+                          | tyVar(x) -> (x, floatType())::tySubs
                           | _ -> tySubs
                           end
          | boolType() -> case typeSubst(ty2, tySubs) of
-                         | tyVar(x) -> pair(x, boolType())::tySubs
+                         | tyVar(x) -> (x, boolType())::tySubs
                          | _ -> tySubs
                          end
          | charType() -> case typeSubst(ty2, tySubs) of
-                         | tyVar(x) -> pair(x, charType())::tySubs
+                         | tyVar(x) -> (x, charType())::tySubs
                          | _ -> tySubs
                          end
          | stringType() -> case typeSubst(ty2, tySubs) of
-                           | tyVar(x) -> pair(x, stringType())::tySubs
+                           | tyVar(x) -> (x, stringType())::tySubs
                            | _ -> tySubs
                            end
          | exceptionType() -> case typeSubst(ty2, tySubs) of
-                              | tyVar(x) -> pair(x, exceptionType())::tySubs
+                              | tyVar(x) -> (x, exceptionType())::tySubs
                               | _ -> tySubs
                               end
          | unitType() -> case typeSubst(ty2, tySubs) of
-                         | tyVar(x) -> pair(x, unitType())::tySubs
+                         | tyVar(x) -> (x, unitType())::tySubs
                          | _ -> tySubs
                          end
          | arrowType(a1, a2) ->
            case typeSubst(ty2, tySubs) of
-           | tyVar(x) -> pair(x, arrowType(a1, a2))::tySubs
+           | tyVar(x) -> (x, arrowType(a1, a2))::tySubs
            | arrowType(b1, b2) ->
              typeUnify(a2, b2, typeUnify(a1, b1, tySubs))
            | _ -> tySubs
@@ -267,19 +267,19 @@ function typeUnify
          | tyVar(v) -> case typeSubst(ty2, tySubs) of
                        | tyVar(x) -> if x == v
                                      then tySubs
-                                     else pair(v, tyVar(x))::tySubs
-                       | t -> pair(v, t)::tySubs
+                                     else (v, tyVar(x))::tySubs
+                       | t -> (v, t)::tySubs
                        end
          | parameterizedTyConstructor(l1, name1) ->
            case typeSubst(ty2, tySubs) of
            | tyVar(x) ->
-             pair(x, parameterizedTyConstructor(l1, name1))::tySubs
+             (x, parameterizedTyConstructor(l1, name1))::tySubs
            | parameterizedTyConstructor(l2, name2)
              when name1 == name2 -> typeListUnify(l1, l2, tySubs)
            | _ -> tySubs
            end
          | tupleType(c1) -> case typeSubst(ty2, tySubs) of
-                            | tyVar(x) -> pair(x, tupleType(c1))::tySubs
+                            | tyVar(x) -> (x, tupleType(c1))::tySubs
                             | tupleType(c2) ->
                               tupleTyBuildUnify(c1, c2, tySubs)
                             | _ -> tySubs
@@ -287,7 +287,7 @@ function typeUnify
          end;
 }
 function tupleTyBuildUnify
-[Pair<String Type>] ::= ttb1::TupleTyBuild ttb2::TupleTyBuild tySubs::[Pair<String Type>]
+[(String, Type)] ::= ttb1::TupleTyBuild ttb2::TupleTyBuild tySubs::[(String, Type)]
 {
   return case ttb1, ttb2 of
          | tupleTyBuildAdd(t1, r1), tupleTyBuildAdd(t2, r2) ->
@@ -296,7 +296,7 @@ function tupleTyBuildUnify
          end;
 }
 function typeListUnify
-[Pair<String Type>] ::= l1::[Type] l2::[Type] tySubs::[Pair<String Type>]
+[(String, Type)] ::= l1::[Type] l2::[Type] tySubs::[(String, Type)]
 {
   return case l1, l2 of
          | h1::t1, h2::t2 ->
@@ -306,11 +306,11 @@ function typeListUnify
 }
 
 function typeListUnify_ByName
-[Pair<String Type>] ::= l1::[Pair<String Type>] l2::[Pair<String Type>] tySubs::[Pair<String Type>]
+[(String, Type)] ::= l1::[(String, Type)] l2::[(String, Type)] tySubs::[(String, Type)]
 {
   return case l1 of
          | [] -> tySubs
-         | pair(n, t)::tl ->
+         | (n, t)::tl ->
            case lookupName(n, l2) of
            | just(ty) -> 
              typeListUnify_ByName(tl, l2, typeUnify(t, ty, tySubs))
@@ -322,7 +322,7 @@ function typeListUnify_ByName
 
 --make all possible substitutions to get the most-specific type
 function typeSubst
-Type ::= ty::Type tySubs::[Pair<String Type>]
+Type ::= ty::Type tySubs::[(String, Type)]
 {
   return case ty of
          | intType() -> intType()
@@ -345,7 +345,7 @@ Type ::= ty::Type tySubs::[Pair<String Type>]
          end;
 }
 function typeSubst_TupleTyBuild
-TupleTyBuild ::= ttb::TupleTyBuild tySubs::[Pair<String Type>]
+TupleTyBuild ::= ttb::TupleTyBuild tySubs::[(String, Type)]
 {
   return case ttb of
          | tupleTyBuildAdd(ty, rest) ->
@@ -355,7 +355,7 @@ TupleTyBuild ::= ttb::TupleTyBuild tySubs::[Pair<String Type>]
          end;
 }
 function typeSubst_List
-[Type] ::= l::[Type] tySubs::[Pair<String Type>]
+[Type] ::= l::[Type] tySubs::[(String, Type)]
 {
   return case l of
          | [] -> []
@@ -364,19 +364,19 @@ function typeSubst_List
 }
 
 function typeSubst_ListNamesTys
-[Pair<String Type>] ::= l::[Pair<String Type>] tySubs::[Pair<String Type>]
+[(String, Type)] ::= l::[(String, Type)] tySubs::[(String, Type)]
 {
   return case l of
          | [] -> []
-         | pair(n, ty)::tl ->
-           pair(n, typeSubst(ty, tySubs))::typeSubst_ListNamesTys(tl, tySubs)
+         | (n, ty)::tl ->
+           (n, typeSubst(ty, tySubs))::typeSubst_ListNamesTys(tl, tySubs)
          end;
 }
 
 
 --check whether two types are equal under the given substitution
 function typeEqual
-Boolean ::= ty1::Type ty2::Type tySubs::[Pair<String Type>]
+Boolean ::= ty1::Type ty2::Type tySubs::[(String, Type)]
 {
   return typeEqual_helper(typeSubst(ty1, tySubs),
                           typeSubst(ty2, tySubs));
@@ -425,27 +425,27 @@ Boolean ::= l1::[Type] l2::[Type]
 }
 
 function typeEqual_TypeList
-Boolean ::= l1::[Type] l2::[Type] subs::[Pair<String Type>]
+Boolean ::= l1::[Type] l2::[Type] subs::[(String, Type)]
 {
   return typeEqual_TypeList_helper(typeSubst_List(l1, subs), typeSubst_List(l2, subs));
 }
 
 --all names in both are related (no extra names in either one)
 function typeEqual_TypeList_ByName
-Boolean ::= l1::[Pair<String Type>] l2::[Pair<String Type>] tySubs::[Pair<String Type>]
+Boolean ::= l1::[(String, Type)] l2::[(String, Type)] tySubs::[(String, Type)]
 {
-  local substl1::[Pair<String Type>] = typeSubst_ListNamesTys(l1, tySubs);
-  local substl2::[Pair<String Type>] = typeSubst_ListNamesTys(l2, tySubs);
+  local substl1::[(String, Type)] = typeSubst_ListNamesTys(l1, tySubs);
+  local substl2::[(String, Type)] = typeSubst_ListNamesTys(l2, tySubs);
   return typeEqual_TypeList_ByName_helper(substl1, substl2) &&
          typeEqual_TypeList_ByName_helper(substl2, substl1);
 }
 function typeEqual_TypeList_ByName_helper
-Boolean ::= l1::[Pair<String Type>] l2::[Pair<String Type>]
+Boolean ::= l1::[(String, Type)] l2::[(String, Type)]
 {
   --everything in l1 is equal to the same name in l2
   return case l1 of
          | [] -> true
-         | pair(n,t)::tl ->
+         | (n,t)::tl ->
            case lookupName(n, l2) of
            | just(t2) ->
              typeEqual_helper(t, t2) &&
@@ -479,11 +479,11 @@ Type ::=
   types for the same name, only one fresh type will be substituted
   in.-}
 function typeFreshen
-Type ::= ty::Type subs::[Pair<String Type>]
+Type ::= ty::Type subs::[(String, Type)]
 {
   local aty::Type = typeSubst(ty, subs);
   local fv::[String] = aty.freeTyVars;
-  local newsubs::[Pair<String Type>] = map(\x::String -> pair(x, freshType()), fv);
+  local newsubs::[(String, Type)] = map(\x::String -> (x, freshType()), fv);
   return typeSubst(aty, newsubs);
 }
 
@@ -504,7 +504,7 @@ Type ::= l::[Type] result::Type
 
 --types known before the current definition set
 --this is for determining whether a type has been defined before
-restricted inherited attribute priorTypes::[Pair<String ExtantType>];
+restricted inherited attribute priorTypes::[(String, ExtantType)];
 --The name of the type being defined
 restricted synthesized attribute name::String;
 
@@ -520,7 +520,7 @@ top::TypeDef ::= params::TypeParams name::String constructors::Constructors
 
   --we need to add the type parameters to check for it being a valid definition
   restricted constructors.knownTypes = top.knownTypes;
-  restricted top.knownTypes_out = [pair(name, inductiveExtant(params.len))];
+  restricted top.knownTypes_out = [(name, inductiveExtant(params.len))];
 
   restricted constructors.knownTyVars = params.names;
 
@@ -582,7 +582,7 @@ top::Constructor ::= name::String
 {
   top.pp = name;
 
-  restricted top.knownConstructors_out = [pair(name, top.buildingType)];
+  restricted top.knownConstructors_out = [(name, top.buildingType)];
 
   restricted top.defOK = case lookupName(name, top.knownConstructors) of
                        | just(_) -> false
@@ -600,7 +600,7 @@ top::Constructor ::= name::String ty::Type
 
   restricted ty.knownTyVars = top.knownTyVars;
 
-  restricted top.knownConstructors_out = [pair(name, arrowType(ty, top.buildingType))];
+  restricted top.knownConstructors_out = [(name, arrowType(ty, top.buildingType))];
 
   restricted top.defOK = case lookupName(name, top.knownConstructors) of
                        | just(_) -> false
@@ -802,26 +802,26 @@ top::ExtantType ::=
 
 
 function knownTypes_ToString
-String ::= l::[Pair<String ExtantType>]
+String ::= l::[(String, ExtantType)]
 {
   return case l of
          | [] -> ""
-         | pair(name, inductiveExtant(num))::tl ->
+         | (name, inductiveExtant(num))::tl ->
            name ++ " : Inductive type with " ++ toString(num) ++ " parametetrs; " ++ knownTypes_ToString(tl)
-         | pair(name, equalExtant(t))::tl ->
+         | (name, equalExtant(t))::tl ->
            name ++ " : Equal to " ++ t.pp ++ "; " ++ knownTypes_ToString(tl)
-         | pair(name, undefinedExtant())::tl ->
+         | (name, undefinedExtant())::tl ->
            name ++ " : Undefined type; " ++ knownTypes_ToString(tl)
          end;
 }
 
 
 function ctx_ToString
-String ::= l::[Pair<String Type>]
+String ::= l::[(String, Type)]
 {
   return case l of
          | [] -> ""
-         | pair(name, ty)::tl ->
+         | (name, ty)::tl ->
            name ++ " : " ++ ty.pp ++ ";\n" ++ ctx_ToString(tl)
          end;
 }
@@ -839,10 +839,10 @@ Type ::= ty::Type
             "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
   local fv::[String] = ty.freeTyVars;
   local fvClean::[String] = removeDuplicates(fv);
-  local temp::Pair<[String] [String]> = intersectionComplement(fvClean, niceVars);
+  local temp::([String], [String]) = intersectionComplement(fvClean, niceVars);
   local goodNiceVars::[String] = snd(temp);
   local goodFV::[String] = fst(temp);
-  local subs::[Pair<String Type>] = makeSubs(goodFV, goodNiceVars);
+  local subs::[(String, Type)] = makeSubs(goodFV, goodNiceVars);
   return typeSubst(ty, subs);
 }
 
@@ -869,26 +869,26 @@ function removeOccurrences
 --remove anything that occurs in both from both
 --assume elements in l1 are unique
 function intersectionComplement
-Pair<[String] [String]> ::= l1::[String] l2::[String]
+([String], [String]) ::= l1::[String] l2::[String]
 {
   return case l1 of
-         | [] -> pair([], l2)
+         | [] -> ([], l2)
          | h::t ->
            if containsBy(\x::String y::String -> x == y, h, l2)
            then intersectionComplement(t, removeOccurrences(l2, h))
            else case intersectionComplement(t, l2) of
-                | pair(r1, r2) -> pair(h::r1, r2)
+                | (r1, r2) -> (h::r1, r2)
                 end
          end;
 }
 
 function makeSubs
-[Pair<String Type>] ::= original::[String] newnames::[String]
+[(String, Type)] ::= original::[String] newnames::[String]
 {
   return case original, newnames of
          | [], _ -> []
          | _, [] -> []
-         | h1::t1, h2::t2 -> pair(h1, tyVar(h2))::makeSubs(t1, t2)
+         | h1::t1, h2::t2 -> (h1, tyVar(h2))::makeSubs(t1, t2)
          end;
 }
 
