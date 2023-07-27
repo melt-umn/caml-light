@@ -104,8 +104,8 @@ top::Expr ::= b::RecBindings e::Expr
 
 
 --we need rec substs so gamma_out doesn't depend on the regular subst, which depends on e.type
-implicit inherited attribute recSubst::Maybe<[(String, Type>]);
-implicit synthesized attribute recSubst_out::Maybe<[(String, Type>]);
+implicit inherited attribute recSubst::Maybe<[(String, Type)]>;
+implicit synthesized attribute recSubst_out::Maybe<[(String, Type)]>;
 
 nonterminal RecBindings with
    pp, gamma, gamma_out, subst, subst_out, knownConstructors, typeOK, knownTypes, recSubst, recSubst_out;

@@ -14,7 +14,7 @@ implicit inherited attribute gamma::Maybe<TyCtxType>;
 --A list of type substitutions for type variables
 --Why is this an implicit Maybe?  This allows us to use the implicit
 --   type to decide what this will be.
-implicit inherited attribute subst::Maybe<[(String, Type>]);
+implicit inherited attribute subst::Maybe<[(String, Type)]>;
 
 --A list of constructors and their types
 restricted inherited attribute knownConstructors::[(String, Type)];
@@ -58,7 +58,7 @@ Type ::= name::String gamma::[(String, Type)] d::Type
 --the updated contexts after a declaration
 implicit synthesized attribute gamma_out::Maybe<TyCtxType>;
 restricted synthesized attribute knownTypes_out::[(String, ExtantType)];
-implicit synthesized attribute subst_out::Maybe<[(String, Type>]);
+implicit synthesized attribute subst_out::Maybe<[(String, Type)]>;
 restricted synthesized attribute knownConstructors_out::[(String, Type)];
 
 
