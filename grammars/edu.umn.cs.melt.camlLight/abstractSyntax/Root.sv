@@ -21,34 +21,28 @@ restricted inherited attribute knownConstructors::[(String, Type)];
 
 
 --find out whether a given type is real and how many parameters it has
-function lookupType
-Maybe<ExtantType> ::= tyname::String knownTypes::[(String, ExtantType)]
-{
-  return case knownTypes of
-         | [] -> nothing()
-         | (name, et)::tl -> if tyname == name
-                                 then just(et)
-                                 else lookupType(tyname, tl)
-         end;
-}
+fun lookupType Maybe<ExtantType> ::= tyname::String knownTypes::[(String, ExtantType)] =
+  case knownTypes of
+  | [] -> nothing()
+  | (name, et)::tl -> if tyname == name
+                          then just(et)
+                          else lookupType(tyname, tl)
+  end;
 
 
 --find the type for a given name
-function lookupName
-Maybe<Type> ::= name::String gamma::[(String, Type)]
-{
-  return case gamma of
-         | [] -> nothing()
-         | (n, ty)::tl -> if name == n
-                              then just(ty)
-                              else lookupName(name, tl)
-         end;
-}
+fun lookupName Maybe<Type> ::= name::String gamma::[(String, Type)] =
+  case gamma of
+  | [] -> nothing()
+  | (n, ty)::tl -> if name == n
+                       then just(ty)
+                       else lookupName(name, tl)
+  end;
 function lookupName_default
 Type ::= name::String gamma::[(String, Type)] d::Type
 {
   return case lookupName(name, gamma) of
-         | nothing() -> d
+         | nothing() -> ^d
          | just(t) -> t
          end;
 }

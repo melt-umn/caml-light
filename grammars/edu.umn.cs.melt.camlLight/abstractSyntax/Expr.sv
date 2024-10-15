@@ -328,7 +328,7 @@ top::Expr ::= name::String
                                     (name, unitType()), top.knownConstructors)  --unit is an unused placeholder
                       then typeFreshen(lookupName(name, top.knownConstructors), top.subst_out)
                       else case typeSubst(lookupName(name, top.gamma), top.subst_out) of
-                           | arrowType(ty1, ty2) -> typeFreshen(arrowType(ty1, ty2), top.subst_out)
+                           | arrowType(ty1, ty2) -> typeFreshen(arrowType(^ty1, ^ty2), top.subst_out)
                            | ty -> ty
                            end;
 }
@@ -414,7 +414,7 @@ top::Expr ::= e1::Expr e2::Expr
   implicit top.subst_out = typeUnify(e1.type, arrowType(e2.type, freshType()), e2.subst_out);
 
   implicit top.type = case typeSubst(e1.type, top.subst_out) of
-                      | arrowType(a, b) when typeEqual(a, e2.type, top.subst_out) -> b
+                      | arrowType(a, b) when typeEqual(^a, e2.type, top.subst_out) -> ^b
                       end;
 }
 
@@ -1251,10 +1251,10 @@ top::Expr ::= e::Expr t::Type
   implicit e.gamma = top.gamma;
 
   implicit e.subst = top.subst;
-  implicit top.subst_out = typeUnify(e.type, t, e.subst_out);
+  implicit top.subst_out = typeUnify(e.type, ^t, e.subst_out);
 
-  implicit top.type = if typeEqual(e.type, t, top.subst_out) && t.validNewVarType
-                      then t
+  implicit top.type = if typeEqual(e.type, ^t, top.subst_out) && t.validNewVarType
+                      then ^t
                       end;
 }
 
